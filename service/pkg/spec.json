@@ -1,0 +1,7 @@
+{
+    "name": "readysetgo",
+    "author": "Chino Franco",
+    "repository": "https://github.com/jgfranco17/readysetgo",
+    "version": "0.0.1",
+    "languages": ["Go"]
+}
