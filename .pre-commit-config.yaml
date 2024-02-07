@@ -13,13 +13,11 @@ repos:
       - id: check-added-large-files
       - id: check-merge-conflict
       - id: detect-private-key
-      - id: requirements-txt-fixer
   - repo: https://github.com/dnephin/pre-commit-golang
     rev: v0.5.1
     hooks:
       - id: go-fmt
       - id: validate-toml
-
   - repo: https://github.com/codespell-project/codespell.git
     rev: v2.2.6
     hooks:
