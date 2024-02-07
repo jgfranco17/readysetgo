@@ -9,32 +9,33 @@ import (
 )
 
 var ROOT_LEVEL_FILES = []string{"main.go", "README.md"}
-var project = models.Project{}
+var projectSubdirs = []models.Subdirectory{
+	{Name: ".github", Files: []string{"actions.yaml"}},
+}
 
-func fillDirectory(directory string, files []string) error {
-	for _, file := range files {
-		filePath := filepath.Join(directory, file)
+func fillDirectory(content models.Subdirectory) error {
+	for _, file := range content.Files {
+		filePath := filepath.Join(content.Name, file)
 		_, err := os.Create(filePath)
 		if err != nil {
-			return fmt.Errorf("Failed to fill directory '%s': %v", directory, err.Error())
+			return fmt.Errorf("Failed to fill directory '%s' with %d files: %v", content.Name, len(content.Files), err)
 		}
 	}
 	return nil
 }
 
-func GenerateProject(projectName string) error {
+func GenerateProject(projectName string, minimal bool) error {
 	// Create project directory
 	err := os.Mkdir(projectName, 0755)
 	if err != nil {
-		return fmt.Errorf("Failed to create project '%s': %v", projectName, err.Error())
+		return fmt.Errorf("Failed to create project '%s': %v", projectName, err)
 	}
 
 	// Create basic project files
 	for _, file := range ROOT_LEVEL_FILES {
-		filePath := filepath.Join(projectName, file)
-		_, err := os.Create(filePath)
+		_, err := os.Create(file)
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to create file '%s': %v", file, err)
 		}
 	}
 
