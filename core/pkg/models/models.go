@@ -10,7 +10,7 @@ type Project struct {
 
 type Subdirectory struct {
 	Name  string
-	Files []string
+	Files []File
 }
 
 type File struct {

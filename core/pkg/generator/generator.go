@@ -10,12 +10,17 @@ import (
 
 var ROOT_LEVEL_FILES = []string{"main.go", "README.md"}
 var projectSubdirs = []models.Subdirectory{
-	{Name: ".github", Files: []string{"actions.yaml"}},
+	{
+		Name: ".github",
+		Files: []models.File{
+			{Name: "actions", Extension: "yaml"},
+		},
+	},
 }
 
-func fillDirectory(content models.Subdirectory) error {
+func fillDirectory(content *models.Subdirectory) error {
 	for _, file := range content.Files {
-		filePath := filepath.Join(content.Name, file)
+		filePath := filepath.Join(content.Name, file.FullName())
 		_, err := os.Create(filePath)
 		if err != nil {
 			return fmt.Errorf("Failed to fill directory '%s' with %d files: %v", content.Name, len(content.Files), err)
