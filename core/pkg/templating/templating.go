@@ -9,12 +9,7 @@ import (
 	"github.com/jgfranco17/readysetgo/core/pkg/models"
 )
 
-var data = models.TextFile{
-	Title:    "My Go Project",
-	Contents: "This is a README generated using Go templating with a .tpl file.",
-}
-
-func CreateTemplatedFile(filename string) {
+func CreateTemplatedFile(filename string, data *models.File) (models.File, error) {
 	// Parse the README template from a .tpl file
 	templateFile := fmt.Sprintf("%s.tpl", filename)
 	templateFilepath := filepath.Join("resources", templateFile)
@@ -35,5 +30,6 @@ func CreateTemplatedFile(filename string) {
 		panic(err)
 	}
 
-	println("README.md generated successfully.")
+	fmt.Printf("%s generated successfully.", filename)
+	return *data, nil
 }
