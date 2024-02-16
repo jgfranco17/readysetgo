@@ -5,8 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/jgfranco17/readysetgo/core/pkg/build"
 	"github.com/jgfranco17/readysetgo/core/pkg/models"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 var ROOT_LEVEL_FILES = []string{"main.go", "README.md"}
@@ -30,19 +31,20 @@ func fillDirectory(content models.Subdirectory) error {
 	return nil
 }
 
-func GenerateProject(projectName string) error {
+func GenerateProject(log *logrus.Entry, projectName string) error {
 	// Create project directory
-	err := os.Mkdir(projectName, 0755)
+	err := build.BuildGoAppRepository(log, projectName)
 	if err != nil {
-		return fmt.Errorf("Failed to create project '%s': %v", projectName, err)
+		return fmt.Errorf("Failed to create base Go project '%s': %v", projectName, err)
 	}
 
 	// Create basic project files
 	for _, baseFile := range ROOT_LEVEL_FILES {
-		_, err := os.Create(baseFile)
+		_, err = os.Create(baseFile)
 		if err != nil {
 			return fmt.Errorf("Failed to create file '%s': %v", baseFile, err)
 		}
+		log.Debugf("Created '%s' file..", baseFile)
 	}
 
 	// Create project subdirectories
@@ -55,6 +57,6 @@ func GenerateProject(projectName string) error {
 		fillDirectory(subdir)
 	}
 
-	log.Debugf("")
+	fmt.Printf("Created '%s' project!", projectName)
 	return nil
 }
