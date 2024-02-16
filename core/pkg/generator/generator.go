@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/jgfranco17/readysetgo/core/pkg/models"
+	log "github.com/sirupsen/logrus"
 )
 
 var ROOT_LEVEL_FILES = []string{"main.go", "README.md"}
@@ -18,7 +19,7 @@ var projectSubdirs = []models.Subdirectory{
 	},
 }
 
-func fillDirectory(content *models.Subdirectory) error {
+func fillDirectory(content models.Subdirectory) error {
 	for _, file := range content.Files {
 		filePath := filepath.Join(content.Name, file.FullName())
 		_, err := os.Create(filePath)
@@ -29,7 +30,7 @@ func fillDirectory(content *models.Subdirectory) error {
 	return nil
 }
 
-func GenerateProject(projectName string, minimal bool) error {
+func GenerateProject(projectName string) error {
 	// Create project directory
 	err := os.Mkdir(projectName, 0755)
 	if err != nil {
@@ -37,12 +38,23 @@ func GenerateProject(projectName string, minimal bool) error {
 	}
 
 	// Create basic project files
-	for _, file := range ROOT_LEVEL_FILES {
-		_, err := os.Create(file)
+	for _, baseFile := range ROOT_LEVEL_FILES {
+		_, err := os.Create(baseFile)
 		if err != nil {
-			return fmt.Errorf("Failed to create file '%s': %v", file, err)
+			return fmt.Errorf("Failed to create file '%s': %v", baseFile, err)
 		}
 	}
 
+	// Create project subdirectories
+	for _, subdir := range projectSubdirs {
+		dirPath := filepath.Join(projectName, subdir.Name)
+		err := os.Mkdir(dirPath, 0755)
+		if err != nil {
+			return fmt.Errorf("Failed to create subdirectory '%s': %v", subdir.Name, err)
+		}
+		fillDirectory(subdir)
+	}
+
+	log.Debugf("")
 	return nil
 }
