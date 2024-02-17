@@ -7,7 +7,10 @@ runall CMD *ARGS:
     -cd service && {{CMD}} {{ARGS}}
 
 test:
-    go test -v github.com/jgfranco17/readysetgo/...
+    @go clean -testcache
+    @echo "Running unittest suite..."
+    go test -v github.com/jgfranco17/readysetgo/... -cover
+    @echo "Ran all unit tests!"
 
 build:
     @echo "Building CLI app..."
