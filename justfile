@@ -15,3 +15,6 @@ build:
     CGO_ENABLED=0 GOOS=linux go build -o ./readysetgo service/cmd/main.go
     chmod +x ./readysetgo
     @echo "Build successful!"
+
+tidy:
+    just runall go mod tidy
